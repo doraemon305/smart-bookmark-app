@@ -1,0 +1,14 @@
+{
+  "buildCommand": "pnpm build",
+  "devCommand": "pnpm dev",
+  "installCommand": "pnpm install",
+  "framework": "vite",
+  "env": {
+    "VITE_SUPABASE_URL": {
+      "description": "Your Supabase project URL"
+    },
+    "VITE_SUPABASE_ANON_KEY": {
+      "description": "Your Supabase anonymous API key"
+    }
+  }
+}
