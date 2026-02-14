@@ -22,109 +22,6 @@ A modern, elegant bookmark management application built with Next.js, Supabase, 
 - **Real-time**: Supabase Realtime subscriptions for multi-tab sync
 - **Deployment**: Vercel
 
-## 📋 Prerequisites
-
-Before getting started, ensure you have:
-
-- Node.js 18+ and pnpm installed
-- A Supabase account (free tier available at [supabase.com](https://supabase.com))
-- A Google Cloud project with OAuth credentials
-- A Vercel account for deployment
-
-## 🚀 Getting Started
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/doraemon305/smart-bookmark-app.git
-cd smart-bookmark-app
-```
-
-### 2. Install Dependencies
-
-```bash
-pnpm install
-```
-
-### 3. Set Up Supabase
-
-#### Create a Supabase Project
-
-1. Go to [supabase.com](https://supabase.com) and sign up
-2. Create a new project
-3. Note your project URL and anonymous key from the API settings
-
-#### Configure Google OAuth
-
-1. In your Supabase dashboard, go to **Authentication > Providers**
-2. Enable Google provider
-3. Add your Google OAuth credentials:
-   - Client ID from your Google Cloud project
-   - Client Secret from your Google Cloud project
-4. Set the redirect URL to: `https://YOUR_PROJECT.supabase.co/auth/v1/callback`
-
-#### Create Database Schema
-
-Run the following SQL in your Supabase SQL editor to create the bookmarks table:
-
-```sql
--- Create bookmarks table
-CREATE TABLE bookmarks (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  title TEXT NOT NULL,
-  url TEXT NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- Create index for faster queries
-CREATE INDEX idx_bookmarks_user_id ON bookmarks(user_id);
-
--- Enable RLS (Row Level Security)
-ALTER TABLE bookmarks ENABLE ROW LEVEL SECURITY;
-
--- Create RLS policies
-CREATE POLICY "Users can view their own bookmarks"
-  ON bookmarks FOR SELECT
-  USING (auth.uid() = user_id);
-
-CREATE POLICY "Users can insert their own bookmarks"
-  ON bookmarks FOR INSERT
-  WITH CHECK (auth.uid() = user_id);
-
-CREATE POLICY "Users can update their own bookmarks"
-  ON bookmarks FOR UPDATE
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);
-
-CREATE POLICY "Users can delete their own bookmarks"
-  ON bookmarks FOR DELETE
-  USING (auth.uid() = user_id);
-
--- Enable Realtime for bookmarks table
-ALTER PUBLICATION supabase_realtime ADD TABLE bookmarks;
-```
-
-### 4. Configure Environment Variables
-
-Create a `.env.local` file in the project root:
-
-```env
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-key-here
-```
-
-Replace with your actual Supabase project URL and anonymous key.
-
-### 5. Run Development Server
-
-```bash
-pnpm dev
-```
-
-The application will be available at `http://localhost:5173`
-
 ## 🔧 Project Structure
 
 ```
@@ -185,31 +82,6 @@ Use the search bar to filter bookmarks by title or URL in real-time.
 ### Real-time Sync
 
 Open the same bookmark manager in multiple tabs. When you add, update, or delete a bookmark in one tab, it automatically appears/updates/disappears in all other tabs without page refresh.
-
-## 🚀 Deployment to Vercel
-
-### 1. Push to GitHub
-
-```bash
-git add .
-git commit -m "Initial commit: Smart Bookmark Manager"
-git push origin main
-```
-
-### 2. Deploy to Vercel
-
-1. Go to [vercel.com](https://vercel.com) and sign in
-2. Click "New Project"
-3. Import your GitHub repository
-4. Set environment variables:
-   - `VITE_SUPABASE_URL`: Your Supabase project URL
-   - `VITE_SUPABASE_ANON_KEY`: Your Supabase anonymous key
-5. Click "Deploy"
-
-### 3. Configure Supabase Redirect URL
-
-Update your Supabase Google OAuth redirect URL to include your Vercel deployment URL:
-- Add: `https://your-vercel-domain.vercel.app/auth/callback`
 
 ## 🐛 Problems Encountered & Solutions
 
@@ -336,26 +208,6 @@ These policies ensure users can only access their own bookmarks at the database 
 </h3>
 ```
 
-## 🧪 Testing
-
-Run the test suite:
-
-```bash
-pnpm test
-```
-
-This includes tests for:
-- Supabase configuration validation
-- Authentication flow
-- Bookmark CRUD operations
-
-## 📱 Browser Support
-
-- Chrome/Edge 90+
-- Firefox 88+
-- Safari 14+
-- Mobile browsers (iOS Safari, Chrome Mobile)
-
 ## 🔒 Security Considerations
 
 1. **Google OAuth**: All authentication is handled by Google and Supabase
@@ -363,27 +215,6 @@ This includes tests for:
 3. **HTTPS Only**: All communication is encrypted
 4. **No Password Storage**: We never store passwords; Google handles authentication
 5. **Secure Cookies**: Session cookies are httpOnly and secure
-
-## 📄 License
-
-MIT License - feel free to use this project for personal or commercial purposes.
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📞 Support
-
-For issues or questions, please open an issue on GitHub.
-
-## 🎉 Acknowledgments
-
-- Built with [React](https://react.dev)
-- Styled with [Tailwind CSS](https://tailwindcss.com)
-- Backend powered by [Supabase](https://supabase.com)
-- Deployed on [Vercel](https://vercel.com)
-- UI components from [Shadcn/UI](https://ui.shadcn.com)
-
 ---
 
 **Happy bookmarking! 🔖**
