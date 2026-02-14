@@ -36,7 +36,7 @@ Before getting started, ensure you have:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/smart-bookmark-app.git
+git clone https://github.com/doraemon305/smart-bookmark-app.git
 cd smart-bookmark-app
 ```
 
